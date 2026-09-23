@@ -113,6 +113,11 @@
         gap: 10px;
       }
 
+      .input-wrap {
+        position: relative;
+        min-width: 0;
+      }
+
       input {
         width: 100%;
         min-width: 0;
@@ -123,7 +128,7 @@
         color: var(--text);
         font: 700 1.2rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         letter-spacing: 0.16em;
-        padding: 0 16px;
+        padding: 0 56px 0 16px;
         text-transform: uppercase;
         outline: none;
       }
@@ -147,6 +152,25 @@
       button:hover,
       button:focus-visible {
         background: var(--accent-strong);
+      }
+
+      .visibility-button {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        background: rgba(248, 250, 252, 0.08);
+        color: var(--text);
+      }
+
+      .visibility-button:hover,
+      .visibility-button:focus-visible {
+        background: rgba(248, 250, 252, 0.14);
       }
 
       .message {
@@ -200,6 +224,11 @@
         line-height: 1.02;
       }
 
+      #account-title {
+        margin-bottom: 8px;
+        color: var(--accent);
+      }
+
       .hidden {
         display: none;
       }
@@ -217,7 +246,7 @@
           grid-template-columns: 1fr;
         }
 
-        button {
+        .code-row > button {
           width: 100%;
         }
 
@@ -247,23 +276,42 @@
           </svg>
         </div>
         <h1 id="gate-title">Enter Code</h1>
-        <p>Use the five-character access code to continue.</p>
+        <p>Use your 13-character account code to continue.</p>
 
         <form id="access-form" autocomplete="off" novalidate>
           <label for="access-code">Access code</label>
           <div class="code-row">
-            <input
-              id="access-code"
-              name="access-code"
-              type="password"
-              inputmode="text"
-              minlength="5"
-              maxlength="5"
-              pattern="[A-Z0-9]{5}"
-              placeholder="NED0A"
-              aria-describedby="code-message"
-              required
-            />
+            <div class="input-wrap">
+              <input
+                id="access-code"
+                name="access-code"
+                type="password"
+                inputmode="text"
+                minlength="17"
+                maxlength="17"
+                placeholder="XXXX-XXX-XX-XXX-X"
+                aria-describedby="code-message"
+                autocomplete="off"
+                spellcheck="false"
+                required
+              />
+              <button
+                class="visibility-button"
+                id="visibility-button"
+                type="button"
+                aria-label="Show code"
+                aria-pressed="false"
+                title="Show code"
+              >
+                <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                </svg>
+                <svg class="eye-closed hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="m3 3 18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 4.2A10.7 10.7 0 0 1 12 4c6.5 0 10 8 10 8a18 18 0 0 1-2.1 3.1M6.6 6.6C3.6 8.5 2 12 2 12s3.5 8 10 8a9.7 9.7 0 0 0 4.1-.9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
             <button type="submit">Unlock</button>
           </div>
           <p class="message" id="code-message" aria-live="polite"></p>
@@ -272,7 +320,7 @@
 
       <section class="site-shell hidden" id="site" aria-labelledby="site-title">
         <header class="site-header">
-          <strong>Private Site</strong>
+          <strong id="account-name">Private Site</strong>
           <button class="lock-button" id="lock-button" type="button" aria-label="Lock site">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
@@ -292,13 +340,35 @@
         </header>
         <div class="placeholder">
           <h2 id="site-title">You are in.</h2>
+          <p id="account-title"></p>
           <p>This is where the website content will go next.</p>
         </div>
       </section>
     </main>
 
     <script>
-      const ACCESS_CODES = new Set(["NED0A", "0M0AR"]);
+      const ACCOUNTS = new Map([
+        ["HBCJ-STB-4D-UQN-8", "Account 01"],
+        ["SRPM-6WZ-QH-BQ9-V", "Account 02"],
+        ["H6QS-BYY-BJ-FUH-Z", "Account 03"],
+        ["GQDM-8CX-A6-45G-C", "Account 04"],
+        ["57X3-3UG-ZT-KM5-H", "Account 05"],
+        ["E75Q-XTY-EY-ACF-B", "Account 06"],
+        ["WRUK-LMF-EA-GQD-3", "Account 07"],
+        ["ZZW4-F72-DQ-DEW-L", "Account 08"],
+        ["S9RG-CHH-6E-U8A-Y", "Account 09"],
+        ["NKXM-C6M-NK-VEQ-Y", "Account 10"],
+        ["B23J-23F-UH-XTK-L", "Account 11"],
+        ["BEJW-Z6T-R2-9XB-T", "Account 12"],
+        ["WPCH-RCL-HQ-4HD-7", "Account 13"],
+        ["WTM6-HHY-46-CPU-8", "Account 14"],
+        ["QT8S-XMV-UF-HEY-W", "Account 15"],
+        ["2KX5-F6Q-FD-RMT-N", "Account 16"],
+        ["YZC9-4TU-US-G26-8", "Account 17"],
+        ["UVNL-MGM-HT-6WM-8", "Account 18"],
+        ["XWDY-E9L-HP-4B7-W", "Account 19"],
+        ["YW6A-LAP-QQ-X9U-J", "Account 20"],
+      ]);
 
       const gate = document.querySelector("#gate");
       const site = document.querySelector("#site");
@@ -306,10 +376,33 @@
       const input = document.querySelector("#access-code");
       const message = document.querySelector("#code-message");
       const lockButton = document.querySelector("#lock-button");
+      const visibilityButton = document.querySelector("#visibility-button");
+      const eyeOpen = visibilityButton.querySelector(".eye-open");
+      const eyeClosed = visibilityButton.querySelector(".eye-closed");
+      const accountName = document.querySelector("#account-name");
+      const accountTitle = document.querySelector("#account-title");
 
-      function showSite() {
+      function formatCode(value) {
+        const raw = value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 13);
+        const groups = [4, 3, 2, 3, 1];
+        const parts = [];
+        let position = 0;
+
+        for (const length of groups) {
+          const part = raw.slice(position, position + length);
+          if (!part) break;
+          parts.push(part);
+          position += length;
+        }
+
+        return parts.join("-");
+      }
+
+      function showSite(account) {
         gate.classList.add("hidden");
         site.classList.remove("hidden");
+        accountName.textContent = `Private Site · ${account}`;
+        accountTitle.textContent = `Signed in as ${account}`;
         message.textContent = "";
       }
 
@@ -317,36 +410,50 @@
         site.classList.add("hidden");
         gate.classList.remove("hidden");
         input.value = "";
+        input.type = "password";
+        visibilityButton.setAttribute("aria-label", "Show code");
+        visibilityButton.setAttribute("aria-pressed", "false");
+        visibilityButton.title = "Show code";
+        eyeOpen.classList.remove("hidden");
+        eyeClosed.classList.add("hidden");
         input.focus();
       }
 
       input.addEventListener("input", () => {
-        input.value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 5);
+        input.value = formatCode(input.value);
         message.textContent = "";
+      });
+
+      visibilityButton.addEventListener("click", () => {
+        const isVisible = input.type === "text";
+        input.type = isVisible ? "password" : "text";
+        visibilityButton.setAttribute("aria-label", isVisible ? "Show code" : "Hide code");
+        visibilityButton.setAttribute("aria-pressed", String(!isVisible));
+        visibilityButton.title = isVisible ? "Show code" : "Hide code";
+        eyeOpen.classList.toggle("hidden", !isVisible);
+        eyeClosed.classList.toggle("hidden", isVisible);
+        input.focus();
       });
 
       form.addEventListener("submit", (event) => {
         event.preventDefault();
 
-        const submittedCode = input.value
-          .trim()
-          .toUpperCase()
-          .replace(/[^A-Z0-9]/g, "")
-          .slice(0, 5);
+        const submittedCode = formatCode(input.value.trim());
         input.value = submittedCode;
 
-        if (submittedCode.length !== 5) {
-          message.textContent = "Enter exactly five capital letters or numbers.";
+        if (submittedCode.length !== 17) {
+          message.textContent = "Enter the complete 13-character account code.";
           return;
         }
 
-        if (!ACCESS_CODES.has(submittedCode)) {
+        const account = ACCOUNTS.get(submittedCode);
+        if (!account) {
           message.textContent = "That code is not correct.";
           input.select();
           return;
         }
 
-        showSite();
+        showSite(account);
       });
 
       lockButton.addEventListener("click", showGate);
