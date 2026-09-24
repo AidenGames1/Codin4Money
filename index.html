@@ -3,285 +3,35 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Access Required</title>
+    <title>Paper Compass</title>
     <meta
       name="description"
-      content="A simple private access gate for a website."
+      content="Local-only Alpaca paper stock research and simulated trading dashboard."
     />
+    <link rel="stylesheet" href="/styles.css" />
     <link
       rel="icon"
       type="image/svg+xml"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1220'/%3E%3Cpath d='M20 28h24v20H20z' fill='%23f8fafc'/%3E%3Cpath d='M25 28v-7a7 7 0 0 1 14 0v7' fill='none' stroke='%236ee7b7' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='38' r='3' fill='%230b1220'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2317221b'/%3E%3Cpath d='M17 45V28h8v17zm11 0V18h8v27zm11 0V24h8v21z' fill='%23d7f171'/%3E%3C/svg%3E"
     />
-    <style>
-      :root {
-        color-scheme: dark;
-        --bg: #07111f;
-        --panel: rgba(15, 23, 42, 0.82);
-        --panel-strong: rgba(15, 23, 42, 0.95);
-        --text: #f8fafc;
-        --muted: #9aa9bd;
-        --line: rgba(148, 163, 184, 0.24);
-        --accent: #6ee7b7;
-        --accent-strong: #34d399;
-        --danger: #fb7185;
-        --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
-        background:
-          radial-gradient(circle at 24% 18%, rgba(110, 231, 183, 0.16), transparent 30%),
-          radial-gradient(circle at 78% 74%, rgba(96, 165, 250, 0.14), transparent 26%),
-          linear-gradient(135deg, #07111f 0%, #101927 54%, #0c1724 100%);
-        color: var(--text);
-      }
-
-      main {
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 28px;
-      }
-
-      .gate,
-      .site-shell {
-        width: min(100%, 430px);
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(18px);
-      }
-
-      .gate {
-        padding: 28px;
-      }
-
-      .lock-mark {
-        width: 44px;
-        height: 44px;
-        display: grid;
-        place-items: center;
-        border: 1px solid rgba(110, 231, 183, 0.4);
-        border-radius: 8px;
-        background: rgba(110, 231, 183, 0.1);
-        margin-bottom: 22px;
-      }
-
-      .lock-mark svg {
-        width: 24px;
-        height: 24px;
-      }
-
-      h1 {
-        margin: 0 0 10px;
-        font-size: clamp(2rem, 5vw, 3.4rem);
-        line-height: 0.98;
-        letter-spacing: 0;
-      }
-
-      p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.55;
-        font-size: 1rem;
-      }
-
-      form {
-        display: grid;
-        gap: 14px;
-        margin-top: 28px;
-      }
-
-      label {
-        font-size: 0.9rem;
-        color: #dbeafe;
-      }
-
-      .code-row {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 10px;
-      }
-
-      .input-wrap {
-        position: relative;
-        min-width: 0;
-      }
-
-      input {
-        width: 100%;
-        min-width: 0;
-        height: 52px;
-        border: 1px solid rgba(148, 163, 184, 0.35);
-        border-radius: 8px;
-        background: rgba(2, 6, 23, 0.6);
-        color: var(--text);
-        font: 700 1.2rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        letter-spacing: 0.16em;
-        padding: 0 56px 0 16px;
-        text-transform: uppercase;
-        outline: none;
-      }
-
-      input:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 4px rgba(110, 231, 183, 0.14);
-      }
-
-      button {
-        height: 52px;
-        border: 0;
-        border-radius: 8px;
-        background: var(--accent);
-        color: #052e22;
-        cursor: pointer;
-        font: 800 0.95rem/1 Inter, ui-sans-serif, system-ui, sans-serif;
-        padding: 0 18px;
-      }
-
-      button:hover,
-      button:focus-visible {
-        background: var(--accent-strong);
-      }
-
-      .visibility-button {
-        position: absolute;
-        top: 6px;
-        right: 6px;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        display: grid;
-        place-items: center;
-        border: 1px solid var(--line);
-        background: rgba(248, 250, 252, 0.08);
-        color: var(--text);
-      }
-
-      .visibility-button:hover,
-      .visibility-button:focus-visible {
-        background: rgba(248, 250, 252, 0.14);
-      }
-
-      .message {
-        min-height: 22px;
-        color: var(--danger);
-        font-size: 0.92rem;
-      }
-
-      .site-shell {
-        width: min(100%, 760px);
-        overflow: hidden;
-      }
-
-      .site-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        padding: 18px 20px;
-        border-bottom: 1px solid var(--line);
-        background: var(--panel-strong);
-      }
-
-      .site-header strong {
-        font-size: 0.95rem;
-      }
-
-      .lock-button {
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        display: grid;
-        place-items: center;
-        background: rgba(248, 250, 252, 0.08);
-        color: var(--text);
-        border: 1px solid var(--line);
-      }
-
-      .lock-button:hover,
-      .lock-button:focus-visible {
-        background: rgba(248, 250, 252, 0.14);
-      }
-
-      .placeholder {
-        padding: 52px 32px;
-      }
-
-      .placeholder h2 {
-        margin: 0 0 12px;
-        font-size: clamp(1.8rem, 5vw, 3rem);
-        line-height: 1.02;
-      }
-
-      #account-title {
-        margin-bottom: 8px;
-        color: var(--accent);
-      }
-
-      .hidden {
-        display: none;
-      }
-
-      @media (max-width: 540px) {
-        main {
-          padding: 18px;
-        }
-
-        .gate {
-          padding: 22px;
-        }
-
-        .code-row {
-          grid-template-columns: 1fr;
-        }
-
-        .code-row > button {
-          width: 100%;
-        }
-
-        .placeholder {
-          padding: 38px 22px;
-        }
-      }
-    </style>
+    <script src="/app.js" defer></script>
   </head>
   <body>
-    <main>
-      <section class="gate" id="gate" aria-labelledby="gate-title">
-        <div class="lock-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path
-              d="M7 10V7a5 5 0 0 1 10 0v3"
-              stroke="#6ee7b7"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-            <path
-              d="M6 10h12v10H6z"
-              stroke="#f8fafc"
-              stroke-width="2"
-              stroke-linejoin="round"
-            />
-          </svg>
+    <main class="gate-layout" id="gate">
+      <section class="gate-panel" aria-labelledby="gate-title">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span>
         </div>
-        <h1 id="gate-title">Enter Code</h1>
-        <p>Use your 13-character account code to continue.</p>
+        <p class="eyebrow">Paper Compass</p>
+        <h1 id="gate-title">Enter your account code</h1>
+        <p class="gate-copy">
+          Use the 13-character code assigned to your dashboard account.
+        </p>
 
         <form id="access-form" autocomplete="off" novalidate>
-          <label for="access-code">Access code</label>
-          <div class="code-row">
-            <div class="input-wrap">
+          <label for="access-code">Account code</label>
+          <div class="gate-actions">
+            <div class="secret-field">
               <input
                 id="access-code"
                 name="access-code"
@@ -296,7 +46,7 @@
                 required
               />
               <button
-                class="visibility-button"
+                class="icon-button reveal-button"
                 id="visibility-button"
                 type="button"
                 aria-label="Show code"
@@ -312,152 +62,198 @@
                 </svg>
               </button>
             </div>
-            <button type="submit">Unlock</button>
+            <button class="primary-button" type="submit">Open dashboard</button>
           </div>
-          <p class="message" id="code-message" aria-live="polite"></p>
+          <p class="form-message" id="code-message" aria-live="polite"></p>
         </form>
-      </section>
 
-      <section class="site-shell hidden" id="site" aria-labelledby="site-title">
-        <header class="site-header">
-          <strong id="account-name">Private Site</strong>
-          <button class="lock-button" id="lock-button" type="button" aria-label="Lock site">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path
-                d="M7 10V7a5 5 0 0 1 10 0v3"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-              <path
-                d="M6 10h12v10H6z"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-        </header>
-        <div class="placeholder">
-          <h2 id="site-title">You are in.</h2>
-          <p id="account-title"></p>
-          <p>This is where the website content will go next.</p>
+        <div class="paper-notice">
+          <strong>PAPER ONLY</strong>
+          <span>No real-money connection is available in this application.</span>
         </div>
       </section>
     </main>
 
-    <script>
-      const ACCOUNTS = new Map([
-        ["HBCJ-STB-4D-UQN-8", "Account 01"],
-        ["SRPM-6WZ-QH-BQ9-V", "Account 02"],
-        ["H6QS-BYY-BJ-FUH-Z", "Account 03"],
-        ["GQDM-8CX-A6-45G-C", "Account 04"],
-        ["57X3-3UG-ZT-KM5-H", "Account 05"],
-        ["E75Q-XTY-EY-ACF-B", "Account 06"],
-        ["WRUK-LMF-EA-GQD-3", "Account 07"],
-        ["ZZW4-F72-DQ-DEW-L", "Account 08"],
-        ["S9RG-CHH-6E-U8A-Y", "Account 09"],
-        ["NKXM-C6M-NK-VEQ-Y", "Account 10"],
-        ["B23J-23F-UH-XTK-L", "Account 11"],
-        ["BEJW-Z6T-R2-9XB-T", "Account 12"],
-        ["WPCH-RCL-HQ-4HD-7", "Account 13"],
-        ["WTM6-HHY-46-CPU-8", "Account 14"],
-        ["QT8S-XMV-UF-HEY-W", "Account 15"],
-        ["2KX5-F6Q-FD-RMT-N", "Account 16"],
-        ["YZC9-4TU-US-G26-8", "Account 17"],
-        ["UVNL-MGM-HT-6WM-8", "Account 18"],
-        ["XWDY-E9L-HP-4B7-W", "Account 19"],
-        ["YW6A-LAP-QQ-X9U-J", "Account 20"],
-      ]);
+    <div class="app-shell hidden" id="app-shell">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-mark small" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <div>
+            <strong>Paper Compass</strong>
+            <span id="signed-in-account">Account</span>
+          </div>
+        </div>
 
-      const gate = document.querySelector("#gate");
-      const site = document.querySelector("#site");
-      const form = document.querySelector("#access-form");
-      const input = document.querySelector("#access-code");
-      const message = document.querySelector("#code-message");
-      const lockButton = document.querySelector("#lock-button");
-      const visibilityButton = document.querySelector("#visibility-button");
-      const eyeOpen = visibilityButton.querySelector(".eye-open");
-      const eyeClosed = visibilityButton.querySelector(".eye-closed");
-      const accountName = document.querySelector("#account-name");
-      const accountTitle = document.querySelector("#account-title");
+        <nav class="sidebar-nav" aria-label="Dashboard pages">
+          <button class="nav-button active" type="button" data-page="opportunities">Opportunities</button>
+          <button class="nav-button" type="button" data-page="portfolio">Portfolio</button>
+          <button class="nav-button" type="button" data-page="research">Research details</button>
+          <button class="nav-button" type="button" data-page="orders">Orders and history</button>
+          <button class="nav-button" type="button" data-page="settings">Settings</button>
+        </nav>
 
-      function formatCode(value) {
-        const raw = value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 13);
-        const groups = [4, 3, 2, 3, 1];
-        const parts = [];
-        let position = 0;
+        <div class="sidebar-footer">
+          <div class="connection-mini" id="connection-mini">
+            <span class="status-dot unavailable"></span>
+            <span>Alpaca not connected</span>
+          </div>
+          <button class="text-button" id="sign-out-button" type="button">Lock dashboard</button>
+        </div>
+      </aside>
 
-        for (const length of groups) {
-          const part = raw.slice(position, position + length);
-          if (!part) break;
-          parts.push(part);
-          position += length;
-        }
+      <div class="workspace">
+        <header class="topbar">
+          <button class="icon-button menu-button" id="menu-button" type="button" aria-label="Open navigation" title="Open navigation">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+          <div class="page-heading">
+            <h2 id="page-heading">Opportunities</h2>
+            <p id="page-subheading">Verified market signals, ranked automatically.</p>
+          </div>
+          <div class="topbar-actions">
+            <span class="paper-badge">PAPER - SIMULATED MONEY</span>
+            <button class="secondary-button" id="sync-button" type="button">Sync now</button>
+          </div>
+        </header>
 
-        return parts.join("-");
-      }
+        <div class="connection-banner" id="connection-banner">
+          <div>
+            <strong>Alpaca not connected.</strong>
+            <span>Add paper credentials locally to load verified account and market data.</span>
+          </div>
+          <button class="secondary-button" type="button" data-go-settings>Connection settings</button>
+        </div>
 
-      function showSite(account) {
-        gate.classList.add("hidden");
-        site.classList.remove("hidden");
-        accountName.textContent = `Private Site · ${account}`;
-        accountTitle.textContent = `Signed in as ${account}`;
-        message.textContent = "";
-      }
+        <main class="content">
+          <section class="page active" id="page-opportunities" data-page-panel="opportunities">
+            <div class="section-toolbar">
+              <div><p class="section-kicker">Automatic discovery</p><h3>Ranked opportunities</h3></div>
+              <div class="toolbar-meta"><span id="feed-label">Feed unavailable</span><span id="research-updated">No research scan yet</span></div>
+            </div>
 
-      function showGate() {
-        site.classList.add("hidden");
-        gate.classList.remove("hidden");
-        input.value = "";
-        input.type = "password";
-        visibilityButton.setAttribute("aria-label", "Show code");
-        visibilityButton.setAttribute("aria-pressed", "false");
-        visibilityButton.title = "Show code";
-        eyeOpen.classList.remove("hidden");
-        eyeClosed.classList.add("hidden");
-        input.focus();
-      }
+            <div class="method-notice">
+              <strong>Market-data screen</strong>
+              <span>Rankings use Alpaca price, spread, activity, and tradability data. They are not probabilities or promises. News, filing, and event verification stay marked unavailable until a verified provider is added.</span>
+            </div>
 
-      input.addEventListener("input", () => {
-        input.value = formatCode(input.value);
-        message.textContent = "";
-      });
+            <div class="opportunity-list" id="opportunity-list">
+              <div class="empty-state">
+                <h4>Connect Alpaca Paper Trading to begin discovery</h4>
+                <p>No demonstration recommendations are mixed with connected account data.</p>
+              </div>
+            </div>
+          </section>
 
-      visibilityButton.addEventListener("click", () => {
-        const isVisible = input.type === "text";
-        input.type = isVisible ? "password" : "text";
-        visibilityButton.setAttribute("aria-label", isVisible ? "Show code" : "Hide code");
-        visibilityButton.setAttribute("aria-pressed", String(!isVisible));
-        visibilityButton.title = isVisible ? "Show code" : "Hide code";
-        eyeOpen.classList.toggle("hidden", !isVisible);
-        eyeClosed.classList.toggle("hidden", isVisible);
-        input.focus();
-      });
+          <section class="page" id="page-portfolio" data-page-panel="portfolio">
+            <div class="metric-grid" id="account-metrics">
+              <article class="metric"><span>Portfolio value</span><strong>Unavailable</strong><small>Alpaca not connected</small></article>
+              <article class="metric"><span>Day gain / loss</span><strong>Unavailable</strong><small>Percentage first</small></article>
+              <article class="metric"><span>Buying power</span><strong>Unavailable</strong><small>Simulated funds</small></article>
+              <article class="metric"><span>Market status</span><strong>Unavailable</strong><small>No clock sync</small></article>
+            </div>
 
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
+            <div class="section-toolbar spaced">
+              <div><p class="section-kicker">Shared paper account</p><h3>Open positions</h3></div>
+              <span class="sync-time" id="portfolio-sync-time">Not synced</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Position</th><th>Gain / loss</th><th>Quantity</th><th>Average fill</th><th>Current price</th><th>Recommendation</th></tr></thead>
+                <tbody id="positions-body"><tr><td colspan="6" class="table-empty">No connected positions.</td></tr></tbody>
+              </table>
+            </div>
+          </section>
 
-        const submittedCode = formatCode(input.value.trim());
-        input.value = submittedCode;
+          <section class="page" id="page-research" data-page-panel="research">
+            <div id="research-detail" class="research-empty">
+              <p class="section-kicker">Research details</p>
+              <h3>Select an opportunity</h3>
+              <p>Open a ranked opportunity to inspect its verified inputs, limits, and unavailable research fields.</p>
+            </div>
+          </section>
 
-        if (submittedCode.length !== 17) {
-          message.textContent = "Enter the complete 13-character account code.";
-          return;
-        }
+          <section class="page" id="page-orders" data-page-panel="orders">
+            <div class="section-toolbar">
+              <div><p class="section-kicker">Alpaca paper account</p><h3>Orders and trade history</h3></div>
+              <span class="sync-time" id="orders-sync-time">Not synced</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Submitted</th><th>Symbol</th><th>Side</th><th>Quantity / notional</th><th>Fill</th><th>Status</th><th>Source</th></tr></thead>
+                <tbody id="orders-body"><tr><td colspan="7" class="table-empty">No connected order history.</td></tr></tbody>
+              </table>
+            </div>
+          </section>
 
-        const account = ACCOUNTS.get(submittedCode);
-        if (!account) {
-          message.textContent = "That code is not correct.";
-          input.select();
-          return;
-        }
+          <section class="page" id="page-settings" data-page-panel="settings">
+            <div class="settings-layout">
+              <section class="settings-section">
+                <p class="section-kicker">Connection status</p><h3>Alpaca Paper Trading</h3>
+                <div class="endpoint-proof"><span>Locked trading endpoint</span><code id="paper-endpoint">https://paper-api.alpaca.markets</code></div>
+                <div class="status-list" id="connection-details">
+                  <div><span>Credentials</span><strong>Not configured</strong></div>
+                  <div><span>Account</span><strong>Not connected</strong></div>
+                  <div><span>Market feed</span><strong>IEX</strong></div>
+                  <div><span>Automatic controller</span><strong>Checking</strong></div>
+                </div>
+                <div class="button-row">
+                  <button class="primary-button" id="verify-button" type="button">Verify paper connection</button>
+                  <button class="secondary-button" id="alerts-button" type="button">Enable browser alerts</button>
+                </div>
+                <p class="fine-print">Credentials are read only from the local <code>.env</code> file. They are never sent to browser code or written to application logs.</p>
+              </section>
 
-        showSite(account);
-      });
+              <section class="settings-section">
+                <p class="section-kicker">Paper mode</p><h3>Trading control</h3>
+                <div class="mode-grid">
+                  <article class="mode-option active" id="manual-mode-card"><strong>Paper Manual</strong><p>Research and sync here. Place simulated trades on Alpaca's website.</p></article>
+                  <article class="mode-option" id="auto-mode-card"><strong>Paper Auto</strong><p>The single local worker may submit simulated orders inside the limits below.</p></article>
+                </div>
+                <div class="auto-status" id="auto-status">
+                  <span class="status-dot paused"></span>
+                  <div><strong>Automatic trading paused</strong><p>No new automatic paper orders will be submitted.</p></div>
+                </div>
+                <div class="button-row">
+                  <button class="primary-button" id="start-auto-button" type="button" disabled>Start automatic paper trading</button>
+                  <button class="secondary-button" id="pause-auto-button" type="button" disabled>Pause automatic trading</button>
+                </div>
+                <p class="fine-print">Pausing stops new automatic orders. Existing positions and pending orders remain visible and unchanged.</p>
+              </section>
 
-      lockButton.addEventListener("click", showGate);
-    </script>
+              <section class="settings-section full-width">
+                <p class="section-kicker">Automatic paper limits</p><h3>Risk and order settings</h3>
+                <form id="settings-form" class="settings-form">
+                  <label>Maximum order value<span class="input-prefix">$</span><input name="maxOrderNotional" type="number" min="10" max="100000" step="10" value="1000" /></label>
+                  <label>Maximum position size<span class="input-suffix">%</span><input name="maxPositionPercent" type="number" min="0.1" max="25" step="0.1" value="2" /></label>
+                  <label>Maximum open positions<input name="maxOpenPositions" type="number" min="1" max="50" step="1" value="5" /></label>
+                  <label>Minimum rank score<input name="minimumRankScore" type="number" min="1" max="100" step="1" value="65" /></label>
+                  <label>Paper stop threshold<span class="input-suffix">%</span><input name="stopLossPercent" type="number" min="-50" max="-0.1" step="0.1" value="-8" /></label>
+                  <label>Paper profit threshold<span class="input-suffix">%</span><input name="takeProfitPercent" type="number" min="0.1" max="200" step="0.1" value="15" /></label>
+                  <label>Scan interval<span class="input-suffix">min</span><input name="scanIntervalMinutes" type="number" min="1" max="60" step="1" value="5" /></label>
+                  <div class="form-submit"><button class="primary-button" type="submit">Save paper limits</button><span id="settings-message" aria-live="polite"></span></div>
+                </form>
+              </section>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <dialog id="auto-dialog">
+      <form method="dialog">
+        <p class="section-kicker">Paper Auto</p><h3>Start automatic paper trading?</h3>
+        <p>The local backend may submit simulated Alpaca orders using the configured limits. No real-money endpoint exists in this app.</p>
+        <div class="dialog-warning">Keep the backend running for monitoring. Closing browser tabs does not pause the backend worker.</div>
+        <div class="dialog-actions"><button class="secondary-button" value="cancel">Cancel</button><button class="primary-button" id="confirm-auto-button" value="default">Start paper automation</button></div>
+      </form>
+    </dialog>
+
+    <div class="toast-region" id="toast-region" aria-live="polite"></div>
+    <div class="sidebar-scrim hidden" id="sidebar-scrim"></div>
   </body>
 </html>
 

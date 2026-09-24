@@ -1,0 +1,16 @@
+{
+  "name": "paper-compass",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local-only Alpaca paper research and trading dashboard",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
+
